@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Details</title>
+</head>
+<body>
+<h1>Movie Details</h1>
+<div id="movieDetails"></div>
+
+<script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+
+        fetch(`/movies/details?title=${encodeURIComponent(title)}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Movie not found');
+            return response.json();
+        })
+        .then(data => {
+            const details = document.getElementById('movieDetails');
+            details.innerHTML = `
+                <h2>${data.title} (${data.genres})</h2>
+            `;
+        })
+        .catch(error => {
+            console.error('Error fetching movie details: ', error);
+            const details = document.getElementById('movieDetails');
+            details.innerHTML = 'Error loading movie details. Please try again.';
+        });
+    }
+</script>
+</body>
+</html>

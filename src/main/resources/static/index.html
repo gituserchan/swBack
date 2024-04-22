@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Catalog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<h1>Movie Catalog</h1>
+<input type="text" id="searchQuery" placeholder="Enter movie title">
+<button onclick="searchMovies()">Search</button>
+<h2>All Movies</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Genres</th>
+    </tr>
+    </thead>
+    <tbody id="moviesTable">
+    <!-- Movie rows will be dynamically added here -->
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    loadMovies();
+});
+
+    function loadMovies() {
+        fetch('/movies/all')
+        .then(response => response.json())
+        .then(data => {
+            const table = document.getElementById('moviesTable');
+            data.forEach(movie => {
+                const row = table.insertRow();
+                const titleCell = row.insertCell();
+                const genresCell = row.insertCell();
+                titleCell.textContent = movie.title;
+                genresCell.textContent = movie.genres;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching all movies: ', error);
+        });
+    }
+
+    function searchMovies() {
+        var query = document.getElementById('searchQuery').value;
+        window.location.href = `/movie-details.html?title=${encodeURIComponent(query)}`;
+    }
+</script>
+</body>
+</html>
